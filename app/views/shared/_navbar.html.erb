@@ -1,0 +1,14 @@
+<ul id="slide-out" class="side-nav fixed">
+  <% sidebar_menu.each do |key, menu_item| %>
+      <li
+      <% if sidebar_item == key %> class="active"
+      <% end %>>
+        <%= link_to menu_item[:url] do %>
+            <% if menu_item[:icon] %><%= fa_icon menu_item[:icon] %>
+                <% end %><%= menu_item[:title] %>
+        <% end %>
+      </li>
+  <% end %>
+  <li><%= link_to destroy_user_session_path, method: :delete do %>Logout<% end %></li>
+</ul>
+<a data-activates="slide-out" class="button-collapse hide-on-large-only black-text"><i class="material-icons medium">&#xE5D2;</i></a>

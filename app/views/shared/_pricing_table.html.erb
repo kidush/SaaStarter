@@ -1,0 +1,42 @@
+  <div class="row pricing-table">
+<% plans.each do |plan| %>
+    <div class="col-sm-4">
+      <div class="panel panel-primary">
+<% if plan.label? %>
+		<div class="cnrflash">
+			<div class="cnrflash-inner">
+				<span class="cnrflash-label"><%= plan.label %></span>
+			</div>
+		</div>
+<% end %>
+		<div class="panel-heading"><h3><%= plan.name %></h3></div>
+		<div class="panel-body">
+			<div class="the-price">
+				<h1><%= Money.new(plan.amount, plan.currency).format %><span class="subscript"> / <%if plan.interval_count > 1 %><%= number_with_precision(plan.interval_count, :precision => 0) %>  <% end %><%= plan.interval %></span></h1>
+<% if plan.trial_period_days > 0 %>
+				<small><%= plan.trial_period_days %> day FREE trial</small>
+<% end %>
+			</div>
+
+			<ul class="list-group text-center" style="margin: 0">
+				<li class="list-group-item"><% if plan.allow_subdomain %><%= fa_icon 'check' %><% else %><%= fa_icon 'times' %><% end %> Choose your subdomain</li>
+				<li class="list-group-item"><% if plan.allow_hostname %><%= fa_icon 'check' %><% else %><%= fa_icon 'times' %><% end %> Custom domain</li>
+				<li class="list-group-item"><%= fa_icon 'user' %> <%= plan.max_users %> Users</li>
+			</ul>
+		</div>
+	    <div class="panel-footer">
+<% if action == :register %>
+		<%= link_to "Sign Up", signup_path(plan), class: "btn btn-lg btn-block btn-success" %>
+<% else %>
+<% if account.plan.id == plan.id %>
+		<%= link_to "Current Plan", edit_settings_plan_path(plan), class: "btn btn-lg btn-block btn-default disabled" %>
+<% else %>
+		<%= link_to "Select", edit_settings_plan_path(plan), class: "btn btn-lg btn-block btn-success" %>
+<% end %>
+<% end %>
+		</div>
+      </div>
+    </div>
+
+<% end %>
+  </div>

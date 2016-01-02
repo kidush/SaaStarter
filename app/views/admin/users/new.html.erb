@@ -1,0 +1,7 @@
+<%
+content_for(:page_title, 'Nuovo Utente')
+content_for(:page_heading, 'Nuovo Utente')
+@nav_item = 'Account'
+%>
+
+<%= render 'form', account: @account, user: @user %>

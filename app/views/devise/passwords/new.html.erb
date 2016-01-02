@@ -1,0 +1,35 @@
+<%
+content_for(:page_title, 'Password Reset')
+content_for(:page_heading, 'Password Reset')
+%>
+
+<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+<%= render_errors resource %>
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Password Reset</h3>
+  </div>
+  <div class="panel-body">
+    <div class="form-group">
+      <%= f.label :email, class: "control-label" %>
+      <div class="input-group">
+        <span class="input-group-addon"><%= fa_icon 'user' %></span>
+        <%= f.text_field :email, class: "form-control" %>
+      </div>
+    </div>
+
+    <%= render "devise/shared/links" %>
+
+  </div>
+
+  <div class="panel-footer">
+    <div class="row">
+      <div class="hidden-xs col-sm-6"></div>
+      <div class="col-xs-12 col-sm-6" style="text-align: right">
+        <%= f.submit "Send", class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

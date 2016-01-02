@@ -1,0 +1,45 @@
+<%
+  content_for(:page_title, 'Utenti')
+  content_for(:page_heading, 'Utenti')
+%>
+
+<div class="row">
+  <div class="col s12">
+    <% if can? :new, User %><%= link_to ('<i class="material-icons right">person_add</i>').html_safe+'Nuovo Utente', new_admin_user_path, class: 'btn btn-large green right' %>
+    <% end %>
+
+    <% if @users.empty? then %>
+        <div class="btn btn-large red">
+          Nessun utente trovato
+        </div>
+    <% else %>
+        <table class="table table-condensed table-striped">
+          <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Email</th>
+            <th>Privilegio Amministratore</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @users.each do |user| %>
+              <tr>
+                <td><%= link_to_if can?(:show, user), user.first_name, admin_user_path(user) %></td>
+                <td><%= link_to_if can?(:show, user), user.last_name, admin_user_path(user) %></td>
+                <td><%= user.email %> <a href="mailto:<%= user.email %>"><i class="material-icons right">send</i></a>
+                </td>
+                <td>
+                  <% unless user.active %><span class="label label-danger">Inattivo</span>
+                  <% end %>
+                  <% if user.super_admin %><span class="label label-success">Attivo</span>
+                  <% end %>
+                </td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <%= paginate @users %>
+    <% end %>
+  </div>
+</div>

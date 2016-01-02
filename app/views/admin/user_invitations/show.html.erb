@@ -1,0 +1,57 @@
+<%
+   content_for(:page_title, "Inviti Utenti - #{@user_invitation}")
+   content_for(:page_heading, 'Inviti Utenti')
+%>
+
+<div class="row">
+  <div class="col s12 m2 l2">
+    <div class="collection z-depth-1">
+      <%= link_to 'Account', admin_account_path(@account), class: 'collection-item' %>
+      <% if can?(:users, @account) %>
+          <%= link_to 'Utenti', admin_account_users_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if can?(:index, @account) %>
+          <%= link_to 'Utenti invitati', admin_account_user_invitations_path(@account), class: 'collection-item active' %>
+      <% end %>
+      <% if can?(:invoices, @account) %>
+          <%= link_to 'Fatture', admin_account_invoices_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if can?(:events, @account) %>
+          <%= link_to 'Eventi', admin_account_events_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if can? :edit, @account %>
+          <%= link_to 'Modifica Account', edit_admin_account_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if @account.status == :active %>
+          <% if can? :destroy, @account %>
+              <%= link_to 'Elimina account', admin_account_cancel_path(@account), class: 'collection-item' %>
+          <% end %>
+      <% end %>
+      <% if @account.status == :cancelled || @account.status == :cancel_pending %>
+          <% if can? :edit, @account %>
+              <%= link_to 'Attivazione account', admin_account_restore_path(@account), class: 'collection-item' %>
+          <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col s12 m10 l10 right-align">
+    <% if can? :edit, @user_invitation %><%= link_to 'Modifica invito utente', edit_admin_account_user_invitation_path(@user_invitation.account, @user_invitation), class: 'btn btn-large yellow' %>
+    <% end %>
+    <% if can? :destroy, @user_invitation %><%= link_to 'Elimina invito utente', admin_account_user_invitation_path(@user_invitation.account, @user_invitation), method: :delete, class: 'btn btn-large red' %>
+    <% end %>
+  </div>
+
+  <div class="col s12 m10 l10">
+    <div class="card-panel teal">
+      <p>Nome: <strong class="right"><%= @user_invitation.first_name %></strong></p>
+      <p>Cognome: <strong class="right"><%= @user_invitation.last_name %></strong></p>
+      <p>Email:
+        <strong class="right"><a class="black-text" href="mailto:<%= @user_invitation.email %>"><%= @user_invitation.email %>
+          <i class="material-icons right">send</i></a></strong></p>
+      <p>Codice invito: <strong class="right"><%= @user_invitation.invite_code %></strong></p>
+    </div>
+  </div>
+
+</div>
+

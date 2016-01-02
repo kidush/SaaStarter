@@ -1,0 +1,55 @@
+<%
+content_for(:page_title, "Plan - #{@plan}")
+content_for(:page_heading, 'Plan')
+%>
+
+<ul class="nav nav-pills">
+  <li class="active"><%= link_to "Plan", admin_plan_path(@plan) %></li>
+  <% if can?(:accounts, @plan) %><li><%= link_to "Accounts", admin_plan_accounts_path(@plan) %></li><% end %>
+</ul>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :edit, @plan %><%= link_to "Edit Plan", edit_admin_plan_path(@plan), class: "btn btn-primary" %><% end %>
+  <% if can? :destroy, @plan %><%= link_to "Delete Plan", admin_plan_path(@plan), method: :delete, class: "btn btn-danger" %><% end %>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>Name</dt>
+  <dd><%= @plan.name %></dd>
+  <dt>Stripe</dt>
+  <dd><%= @plan.stripe_id %></dd>
+  <dt>Statement Description</dt>
+  <dd><%= @plan.statement_description %></dd>
+  <dt>Active</dt>
+  <dd><%= @plan.active %></dd>
+  <dt>Is Public?</dt>
+  <dd><%= @plan.public %></dd>
+  <dt>Paused Plan</dt>
+  <dd><%= @plan.paused_plan %></dd>
+  <dt>Label</dt>
+  <dd><%= @plan.label %></dd>
+</dl>
+
+<h3>Pricing</h3>
+<dl class="dl-horizontal">
+  <dt>Currency</dt>
+  <dd><%= @plan.currency %></dd>
+  <dt>Amount</dt>
+  <dd><%=  formatted_plan_price(@plan) %></dd>
+  <dt>Trial Period Days</dt>
+  <dd><%= @plan.trial_period_days %></dd>
+  <dt>Require Card Upfront</dt>
+  <dd><%= @plan.require_card_upfront %>
+</dl>
+
+<h3>Features</h3>
+<dl class="dl-horizontal">
+  <dt>Max Users</dt>
+  <dd><%= @plan.max_users %>
+  <dt>Allow Custom Path</dt>
+  <dd><%= @plan.allow_custom_path %>
+  <dt>Allow Hostname</dt>
+  <dd><%= @plan.allow_hostname %>
+  <dt>Allow Subdomain</dt>
+  <dd><%= @plan.allow_subdomain %>
+</dl>

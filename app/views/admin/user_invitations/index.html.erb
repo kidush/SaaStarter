@@ -1,0 +1,87 @@
+<%
+  content_for(:page_title, 'Invito Utenti')
+  content_for(:page_heading, 'Invito Utenti')
+  @nav_item = 'Invito Utenti' unless @account
+%>
+
+
+<div class="row">
+  <% if @account %>
+      <div class="col s12 m2 l2">
+        <div class="collection z-depth-1">
+          <% if can?(:index, @account) %>
+              <%= link_to 'Account', admin_account_path(@account), class: 'collection-item' %>
+          <% end %>
+          <% if can?(:users, @account) %>
+              <%= link_to 'Utenti', admin_account_users_path(@account), class: 'collection-item' %>
+          <% end %>
+          <%= link_to 'Nuovo Utente', admin_account_user_invitations_path(@account), class: 'collection-item active' %>
+          <% if can?(:invoices, @account) %>
+              <%= link_to 'Fatture', admin_account_invoices_path(@account), class: 'collection-item' %>
+          <% end %>
+          <% if can?(:events, @account) %>
+              <%= link_to 'Eventi', admin_account_events_path(@account), class: 'collection-item' %>
+          <% end %>
+          <% if can? :edit, @account %>
+              <%= link_to 'Modifica Account', edit_admin_account_path(@account), class: 'collection-item' %>
+          <% end %>
+          <% if @account.status == :active %>
+              <% if can? :destroy, @account %>
+                  <%= link_to 'Elimina Account', admin_account_cancel_path(@account), class: 'collection-item' %>
+              <% end %>
+          <% end %>
+          <% if @account.status == :cancelled || @account.status == :cancel_pending %>
+              <% if can? :edit, @account %>
+                  <%= link_to 'Attivazione Account', admin_account_restore_path(@account), class: 'collection-item' %>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+      <div class="col s12 m10 l10 right-align">
+        <% if can? :new, UserInvitation %><%= link_to ('<i class="material-icons right">code</i>').html_safe+'Nuovo invito', new_admin_account_user_invitation_path(@account), class: 'btn btn-large green' %>
+        <% end %>
+      </div>
+  <% end %>
+
+
+  <% if @user_invitations.empty? then %>
+      <div class="col s12 m10 l10 center-align">
+        <div class="btn btn-large red">
+          <i class="material-icons left medium">warning</i>
+          Nessun invito
+          <i class="material-icons right medium">warning</i>
+        </div>
+      </div>
+  <% else %>
+      <% if @account %>
+          <div class="col s12 m10 l10">
+      <% else %>
+          <div class="col s12">
+      <% end %>
+      <table class="responsive-table highlight">
+        <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Cognome</th>
+          <th>Email</th>
+          <th>Codice Invito</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @user_invitations.each do |user_invitation| %>
+            <tr>
+              <td><%= link_to_if can?(:show, user_invitation), user_invitation.first_name.capitalize, admin_account_user_invitation_path(user_invitation.account, user_invitation) %></td>
+              <td><%= link_to_if can?(:show, user_invitation), user_invitation.last_name.capitalize, admin_account_user_invitation_path(user_invitation.account, user_invitation) %></td>
+              <td>
+                <a href="mailto:<%= user_invitation.email %>"><%= user_invitation.email %></a>
+              </td>
+              <td><%= user_invitation.invite_code %></td>
+            </tr>
+        <% end %>
+        </tbody>
+      </table>
+      <%= paginate @user_invitations %>
+      </div>
+  <% end %>
+  </div>
+  </div>

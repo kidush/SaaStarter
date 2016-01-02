@@ -1,0 +1,42 @@
+<%
+content_for(:page_title, 'Plans')
+content_for(:page_heading, 'Plans')
+%>
+
+<div style="text-align: right; padding: 10px 0px;">
+  <% if can? :new, Plan %><%= link_to ('<i class="material-icons right">payment</i>').html_safe + 'Nuovo Piano', new_admin_plan_path, class: 'btn btn-large green' %><% end %>
+</div>
+
+<% if @plans.empty? then %>
+<p>No plans found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Nome</th>
+			<th>Stripe</th>
+			<th>Attivo</th>
+			<th>Pubblico</th>
+			<th>Valuta</th>
+			<th>Importo</th>
+			<th>Periodo di prova</th>
+			<th>Carta di credito richiesta</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @plans.each do |plan| %>
+		<tr>
+			<td><%= link_to_if can?(:show, plan), plan.name, admin_plan_path(plan) %></td>
+			<td><%= plan.stripe_id %></td>
+			<td><%= plan.active %></td>
+			<td><%= plan.public %></td>
+			<td><%= plan.currency %></td>
+			<td><%= formatted_plan_price(plan) %></td>
+			<td><%= number_with_precision(plan.trial_period_days, :precision => 0) %></td>
+			<td><%= plan.require_card_upfront %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @plans %>
+<% end %>

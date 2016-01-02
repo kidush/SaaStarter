@@ -1,0 +1,44 @@
+<%
+  content_for(:page_title, "Codice invito - #{@user}")
+  content_for(:page_heading, 'Codice invito')
+%>
+
+<div class="row">
+  <div class="col s12 m2 l2">
+    <div class="collection z-depth-1">
+      <% if can?(:show, @user) %>
+          <%= link_to 'Utente', admin_user_path(@user), class: 'collection-item' %>
+      <% end %>
+      <% if can?(:accounts, @user) %>
+          <%= link_to 'Account', admin_user_accounts_path(@user), class: 'collection-item' %>
+      <% end %>
+      <%= link_to 'Inviti', admin_user_user_invitations_path(@user), class: 'collection-item active' %>
+    </div>
+  </div>
+
+  <div class="col s12 m10 l10 center-align">
+    <% if @user_invitations.empty? then %>
+        <div class="btn btn-large red">
+          Nessun codice invito
+        </div>
+    <% else %>
+        <table class="responsive-table highlight">
+          <thead>
+          <tr>
+            <th>Account</th>
+            <th>Codice invito</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @user_invitations.each do |user_invitation| %>
+              <tr>
+                <td><%= link_to user_invitation.account, admin_account_path(user_invitation.account) %></td>
+                <td><%= link_to 'Show', admin_account_user_invitation_path(user_invitation.account, user_invitation) %></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <%= paginate @user_invitations %>
+    <% end %>
+  </div>
+</div>

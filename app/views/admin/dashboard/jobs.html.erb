@@ -1,0 +1,48 @@
+<%
+   content_for(:page_title, 'Jobs')
+   content_for(:page_heading, 'Jobs')
+%>
+
+<div class="row overflow-y-hidden">
+  <div class="col s12 overflow-y-scroll center-align">
+    <% if @jobs.empty? then %>
+        <div class="btn-btn-large red">
+          Nessun lavoro
+        </div>
+    <% else %>
+        <table class="responsive-table highlight centered">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fila</th>
+            <th>Priorita</th>
+            <th>Descrizione</th>
+            <th>Tentativi</th>
+            <th>Errore</th>
+            <th>Ora esecuzione</th>
+            <th>Ora fallimento</th>
+            <th>Ora Blocco</th>
+            <th>Bloccato da</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @jobs.each do |job| %>
+              <tr>
+                <td><%= job.id %></td>
+                <td><%= job.queue %></td>
+                <td><%= job.priority %></td>
+                <td><%= job.handler %></td>
+                <td><%= job.attempts %></td>
+                <td><%= job.last_error %></td>
+                <td><%= job.run_at %></td>
+                <td><%= job.failed_at %></td>
+                <td><%= job.locked_at %></td>
+                <td><%= job.locked_by %></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <%= paginate @jobs %>
+    <% end %>
+  </div>
+</div>

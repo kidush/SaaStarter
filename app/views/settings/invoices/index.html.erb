@@ -1,0 +1,32 @@
+<%
+content_for(:page_title, 'Invoices')
+content_for(:page_heading, 'Invoices')
+%>
+
+<% if @invoices.empty? then %>
+<p>No invoices found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Inv #</th>
+			<th>Invoiced At</th>
+			<th>Paid At</th>
+			<th>Amount</th>
+			<th>Download</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @invoices.each do |invoice| %>
+		<tr>
+			<td><%= invoice.inv_number %></td>
+			<td><%= invoice.invoiced_at %></td>
+			<td><%= invoice.paid_at %></td>
+			<td><%= invoice.total_amount %></td>
+                        <td><% if invoice.download_url %><a href="<%= settings_invoice_path(invoice) %>"><%= fa_icon 'download' %></a><% end %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @invoices %>
+<% end %>

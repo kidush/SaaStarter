@@ -1,0 +1,6 @@
+<%
+content_for(:page_title, "Modifica motivi cancellazione - #{@cancellation_reason}")
+content_for(:page_heading, 'Modifica motivi cancellazione')
+%>
+
+<%= render 'form', cancellation_category: @cancellation_category, cancellation_reason: @cancellation_reason %>

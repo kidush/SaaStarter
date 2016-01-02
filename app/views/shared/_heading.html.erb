@@ -1,0 +1,21 @@
+<h1><%= yield :page_heading %>
+  <% if content_for? :page_sub_heading %>
+      <small><%= yield :page_sub_heading %></small>
+  <% end %>
+</h1>
+<nav>
+  <div class="nav-wrapper">
+    <div class="col s12">
+        <% path = params[:path] ? tenant_root_path : root_path %>
+        <%= link_to 'Home', path, class: 'breadcrumb' %>
+      <%= render_breadcrumbs :tag => :breadcrumb, :separator => '' %>
+    </div>
+  </div>
+</nav>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('breadcrumb').addClass('breadcrumb');
+    $('.breadcrumb:nth-child(2)').remove()
+  });
+</script>

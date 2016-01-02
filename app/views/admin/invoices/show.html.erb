@@ -1,0 +1,29 @@
+<%
+content_for(:page_title, "Invoice - #{@user_invitation}")
+content_for(:page_heading, 'Invoices')
+%>
+
+<% if @account %>
+<ul class="nav nav-pills">
+  <% if can?(:index, @account) %><li><%= link_to "Account", admin_account_path(@account) %></li><% end %>
+  <% if can?(:users, @account) %><li><%= link_to "Users", admin_account_users_path(@account) %></li><% end %>
+  <% if can?(:index, @account) %><li><%= link_to "User Invitations", admin_account_user_invitations_path(@account) %></li><% end %>
+  <li class="active"><%= link_to "User Invitation: #{@user_invitation}", admin_account_user_invitation_path(@account, @user_invitation) %></li>
+  <% if can?(:events, @account) %><li><%= link_to "Events", admin_account_events_path(@account) %></li><% end %>
+</ul>
+<% end %>
+
+<dl class="dl-horizontal">
+  <dt>Invoice Number</dt>
+  <dd><%= @invoice.inv_number %></dd>
+  <dt>Account</dt>
+  <dd><%= link_to_if can?(:show, @invoice.account), @invoice.account, admin_account_path(@invoice.account) %></dd>
+  <dt>Invoiced At</dt>
+  <dd><%= @invoice.invoiced_at %></dd>
+  <dt>Paid At</dt>
+  <dd><%= @invoice.paid_at %></dd>
+  <dt>Total Amount</dt>
+  <dd><%= @invoice.total_amount %></dd>
+  <dt>Stripe ID</dt>
+  <dd><%= @invoice.stripe_invoice_id %> <a href="https://dashboard.stripe.com/test/invoices/<%= @invoice.stripe_invoice_id  %>"><%= fa_icon 'external-link' %></a><% if @invoice.download_url %> <a href="<%= @invoice.download_url %>"><%= fa_icon 'download' %><% end %></dd>
+</dl>

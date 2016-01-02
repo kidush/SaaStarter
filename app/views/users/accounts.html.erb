@@ -1,0 +1,32 @@
+<%
+content_for(:page_title, "User Accounts - #{@user}")
+content_for(:page_heading, 'User Accounts')
+%>
+
+<ul class="nav nav-pills">
+  <% if can?(:index, @user) %><li><%= link_to "User", user_path(@user) %></li><% end %>
+  <li class="active"><%= link_to "Accounts", user_accounts_path(@user) %></li>
+  <% if can?(:invitations, @user) %><li><%= link_to "Invitations", user_user_invitations_path(@user) %></li><% end %>
+</ul>
+
+<% if @user_permissions.empty? then %>
+<p>No accounts found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Admin</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @user_permissions.each do |user_permission| %>
+		<tr>
+			<td><%= link_to user_permission.account.to_s, tenant_root_path(path: user_permission.account.id) %></td>
+			<td><%= user_permission.account_admin %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @user_permissions %>
+<% end %>

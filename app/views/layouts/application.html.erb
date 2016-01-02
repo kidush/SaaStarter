@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= page_title separator: ' | ' %></title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <!-- Just for debugging purposes. Don't actually copy this line! -->
+  <!--[if lt IE 9]>
+  <script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <%= csrf_meta_tags %>
+  <%= yield :head %>
+</head>
+<body class="grey lighten-2">
+
+<header>
+  <%= render 'shared/navbar', sidebar_menu: @sidebar_menu, sidebar_item: @sidebar_item %>
+</header>
+
+<main>
+  <div class="container">
+
+    <%= render 'shared/heading' %>
+
+    <% render 'shared/flash' %>
+
+    <%= yield %>
+
+  </div>
+</main>
+
+<%= render 'shared/footer' %>
+
+<%= yield :footer %>
+
+<script>
+  $(document).on('ready page:load', function () {
+
+    $('.mobile-nav').on('click', function () {
+      $('#left-side-nav').toggleClass('hidden-xs');
+    });
+
+    $('select').material_select();
+
+    $('ul.tabs').tabs();
+
+    $(".button-collapse").sideNav();
+
+    $('.datepicker').pickadate({
+      selectMonths: true, // Creates a dropdown to control month
+      selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+
+  });
+</script>
+</body>
+</html>

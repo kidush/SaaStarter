@@ -1,0 +1,124 @@
+<%= render_errors plan %>
+
+<div class="row">
+  <%= form_for [:admin, plan] do |f| %>
+      <div class="col s12 m4 l4">
+        <%= f.label :name, 'Nome' %>
+        <%= f.text_field :name, class: 'validate' %>
+      </div>
+      <% if plan.new_record? %>
+          <div class="col s12 m2 l2">
+            <%= f.label :stripe_id, 'Nome circuito Stripe' %>
+            <%= f.text_field :stripe_id, class: 'validate' %>
+          </div>
+      <% else %>
+          <div class="col s12 m2 l2">
+            <%= f.label :stripe_id, 'ID circuito Stripe' %>
+            <%= plan.stripe_id %></p>
+          </div>
+      <% end %>
+      <div class="col s12 m2 l2">
+        <%= f.label :statement_description, 'Descizione' %>
+        <%= f.text_field :statement_description, class: 'validate' %>
+      </div>
+      <div class="col s12 m2 l2">
+        <%= f.label :paused_plan_id, 'Piano bloccato' %>
+        <%= f.collection_select :paused_plan_id, Plan.all, :id, :name, {include_blank: true}, {class: 'validate'} %>
+      </div>
+      <div class="col s12 m2 l2">
+        <%= f.label :label, 'Etichetta' %>
+        <%= f.text_field :label, class: 'validate' %>
+      </div>
+      <div class="col s12">
+        <p>
+          <%= f.check_box :active %>
+          <%= f.label :active, 'Piano attivo' %>
+        </p>
+        <p>
+          <%= f.check_box :public %>
+          <%= f.label :public, 'Piano pubblico' %>
+        </p>
+      </div>
+      </div>
+      <div class="row">
+        <h2>Prezzo </h2>
+        <% if plan.new_record? %>
+            <div class="col s12 m4 l4">
+              <%= f.label :currency, 'Valuta' %>
+              <%= f.select :currency, currency_list, {}, {class: 'validate'} %>
+            </div>
+            <div class="col s12 m2 l2">
+              <%= f.label :amount, 'Importo' %>
+              <%= f.text_field :amount, class: 'validate' %>
+            </div>
+            <div class="col s12 m2 l2">
+              <%= f.label :interval_count, 'Range intervallo' %>
+              <%= f.text_field :interval_count, class: 'validate' %>
+            </div>
+            <div class="col s12 m2 l2">
+              <%= f.label :interval, 'Intervallo' %>
+              <%= f.select :interval, [['Giorno', 'day'], ['Settimana', 'week'], ['Mese', 'month'], ['Anno', 'year']], {}, {class: 'validate'} %>
+            </div>
+            <div class="col s12 m2 l2">
+              <%= f.label :trial_period_days, 'Periodo di prova' %>
+              <%= f.text_field :trial_period_days, class: 'validate' %>
+            </div>
+        <% else %>
+            <div class="col s12 m4 l4">
+              <%= f.label :currency, 'Valuta' %>
+              <%= plan.currency %></p>
+            </div>
+            <div class="col s12 m2 l2">
+              <%= f.label :amount, 'Importo' %>
+              <%= plan.amount %>
+            </div>
+            <div class="col s12 m2 l2">
+              <%= f.label :interval_count, 'Range intervallo' %>
+              <%= plan.interval_count %></p>
+            </div>
+            <div class="col s12 m2 l2">
+              <%= f.label :interval, 'Intervallo' %>
+              <%= plan.interval %></p>
+            </div>
+            <div class="col s12 m2 l2">
+              <%= f.label :trial_period_days, 'Periodo di prova' %>
+              <%= plan.trial_period_days %></p>
+            </div>
+        <% end %>
+        <div class="col s12 m3 l3">
+          <p>
+          <%= f.check_box :require_card_upfront %>
+          <%= f.label :require_card_upfront, 'Carta richiesta alla sottoscrizione' %>
+          </p>
+        </div>
+      </div>
+      <div class="row">
+        <h2>Specifiche Utilizzo</h2>
+        <div class="col s12 m6 l6">
+          <%= f.label :max_users, 'Massimo Utenti' %>
+          <%= f.text_field :max_users, class: 'validate' %>
+        </div>
+        <div class="col s12 m6 l6">
+          <p>
+            <%= f.check_box :allow_custom_path %>
+            <%= f.label :allow_custom_path, 'Path personalizzato ammesso' %>
+          </p>
+          <p>
+            <%= f.check_box :allow_hostname %>
+            <%= f.label :allow_hostname, 'Hostname personalizzato ammesso' %>
+          </p>
+          <p>
+            <%= f.check_box :allow_subdomain %>
+            <%= f.label :allow_subdomain, 'Sottodominio personalizzato ammesso' %>
+          </p>
+        </div>
+        <div class="col s12 center-align">
+          <%= f.submit 'Salva', class: 'btn btn-large green' %>
+          <% if plan.new_record? %>
+              <%= link_to 'Annulla', admin_plans_path, class: 'btn btn-large red' %>
+          <% else %>
+              <%= link_to 'Annulla', admin_plan_path(plan), class: 'btn btn-large red' %>
+          <% end %>
+        </div>
+  <% end %>
+  </div>

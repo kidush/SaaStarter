@@ -1,0 +1,42 @@
+<%
+   content_for(:page_title, 'Eventi')
+   content_for(:page_heading, 'Eventi')
+%>
+
+<div class="row">
+  <div class="col s12">
+    <% if @app_events.empty? then %>
+        <div class="btn-btn-large red valign">
+          Nessun evento
+        </div>
+    <% else %>
+        <table class="responsive-table highlight">
+          <thead>
+          <tr>
+            <th>Data (Giorno - Ora)</th>
+            <th>Account</th>
+            <th>Utente</th>
+            <th>Esito</th>
+            <th>Messaggio</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @app_events.each do |app_event| %>
+              <tr>
+                <td><%= app_event.created_at %></td>
+                <td>
+                  <% if app_event.account != nil %><%= link_to app_event.account, admin_account_path(app_event.account) %>
+                  <% end %></td>
+                <td>
+                  <% if app_event.user != nil %><%= link_to app_event.user, admin_user_path(app_event.user) %>
+                  <% end %></td>
+                <td><%= log_level(app_event) %></td>
+                <td><%= app_event.message %></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <%= paginate @app_events %>
+    <% end %>
+  </div>
+</div>

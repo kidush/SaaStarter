@@ -1,0 +1,6 @@
+<%
+content_for(:page_title, "Edit User - #{@user}")
+content_for(:page_heading, 'Edit User')
+%>
+
+<%= render 'form', user: @user %>

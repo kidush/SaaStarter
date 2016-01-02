@@ -1,0 +1,28 @@
+<%= render_errors user_invitation %>
+
+<%= form_for [:admin, account, user_invitation] do |f| %>
+    <div class="row">
+      <div class="input-field col s12 m4 l4">
+        <%= f.text_field :first_name %>
+        <%= f.label :first_name, 'Nome' %>
+      </div>
+      <div class="input-field col s12 m4 l4">
+        <%= f.text_field :last_name %>
+        <%= f.label :last_name, 'Cognome' %>
+      </div>
+      <div class="input-field col s12 m4 l4">
+        <%= f.text_field :email %>
+        <%= f.label :email, 'Email' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12 right-align">
+        <%= f.submit 'Aggiungi', class: 'btn btn-large green right-align' %>
+        <% if user_invitation.new_record? %>
+            <%= link_to 'Elimina', admin_account_user_invitations_path(account), class: 'btn btn-large red' %>
+        <% else %>
+            <%= link_to 'Elimina', admin_account_user_invitation_path(user_invitation.account, user_invitation), class: 'btn btn-large red' %>
+        <% end %>
+      </div>
+    </div>
+<% end %>

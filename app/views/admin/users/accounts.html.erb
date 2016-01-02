@@ -1,0 +1,39 @@
+<%
+   content_for(:page_title, "User Accounts - #{@user}")
+   content_for(:page_heading, 'Accounts')
+%>
+
+<div class="row">
+  <div class="col s12 m2 l2">
+    <div class="collection z-depth-1">
+      <%= link_to 'Utente', admin_user_path(@user), class: 'collection-item' %>
+      <% if can?(:accounts, @user) %><%= link_to 'Account', admin_user_accounts_path(@user), class: 'collection-item active' %>
+      <% end %>
+      <% if can?(:index, @user) %><%= link_to 'Inviti', admin_user_user_invitations_path(@user), class: 'collection-item' %>
+      <% end %>
+    </div>
+  </div>
+  <div class="col s12 m10 l10">
+    <% if @user_permissions.empty? then %>
+        <p>Nessun account trovato</p>
+    <% else %>
+        <table class="table table-condensed table-striped">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Admin</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @user_permissions.each do |user_permission| %>
+              <tr>
+                <td><%= link_to_if can?(:show, user_permission.account), user_permission.account.to_s, admin_account_path(user_permission.account) %></td>
+                <td><%= user_permission.account_admin %></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <%= paginate @user_permissions %>
+    <% end %>
+  </div>
+</div>

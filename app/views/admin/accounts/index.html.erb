@@ -1,0 +1,45 @@
+<%
+   content_for(:page_title, 'Account')
+   content_for(:page_heading, 'Account')
+%>
+
+<div class="row valign-wrapper">
+  <div class="col s12 right-align">
+    <% if can? :new, Account %><%= link_to ('<i class="material-icons right">person_add</i>').html_safe+'Nuovo Account', new_admin_account_path, class: 'btn btn-large green' %>
+    <% end %>
+  </div>
+</div>
+
+<% if @accounts.empty? then %>
+    <div class="btn btn-large red valign">
+      Nessun account presente
+    </div>
+<% else %>
+    <table class="responsive-table highlight">
+      <thead>
+      <tr>
+        <th>Azienda</th>
+        <th>Attivo</th>
+        <th>Piano</th>
+        <th>Citta</th>
+        <th>Cap</th>
+        <th>Stato</th>
+        <th>Nazione</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @accounts.each do |account| %>
+          <tr>
+            <td><%= link_to_if can?(:show, account), account.company_name, admin_account_path(account) %></td>
+            <td><%= account_status(account) %></td>
+            <td><%= link_to_if can?(:show, account.plan), account.plan, admin_plan_path(account.plan) %></td>
+            <td><%= account.address_city %></td>
+            <td><%= account.address_zip %></td>
+            <td><%= account.address_state %></td>
+            <td><%= account.address_country %></td>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <%= paginate @accounts %>
+<% end %>

@@ -1,0 +1,51 @@
+<%= render_errors user %>
+
+<div class="row center-align">
+  <h3>Form per l'inserimento di un nuovo utente</h3>
+  <%= form_for [:admin, user] do |f| %>
+      <div class="input-field col s12 m3 l3 offset-m3 offset-l3">
+        <i class="small material-icons prefix">person</i>
+        <%= f.text_field :first_name, class: 'validate' %>
+        <%= f.label :first_name, 'Nome' %>
+      </div>
+      <div class="input-field col s12 m3 l3">
+        <%= f.text_field :last_name, class: 'validate' %>
+        <%= f.label :last_name, 'Cognome' %>
+      </div>
+      <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
+        <i class="material-icons prefix">email</i>
+        <%= f.text_field :email, class: 'validate' %>
+        <%= f.label :email, 'Email' %>
+      </div>
+      <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
+        <i class="material-icons prefix">vpn_key</i>
+        <%= f.password_field :password, class: 'validate' %>
+        <%= f.label :password, 'Password' %>
+      </div>
+      <div class="input-field col s12 m6 l6 offset-m3 offset-l3">
+        <i class="material-icons prefix">vpn_key</i>
+        <%= f.password_field :password_confirmation, class: 'validate' %>
+        <%= f.label :password_confirmation, 'Conferma password' %>
+      </div>
+      <div class="col s12 m3 l3 offset-m5 offset-l5">
+        <p>
+          <%= f.check_box :active %>
+          <%= f.label :active, 'Attivazione' %>
+        </p>
+        <p>
+          <%= f.check_box :super_admin %>
+          <%= f.label :super_admin, 'Privilegi amministratore' %>
+        </p>
+      </div>
+      </div>
+      <div class="row">
+        <div class="col s12 center-align">
+          <%= f.submit 'Salva', class: 'btn btn-large green' %>
+          <% if user.new_record? %>
+              <%= link_to 'Annulla', admin_users_path, class: 'btn btn-large red' %>
+          <% else %>
+              <%= link_to 'Annulla', admin_user_path(user), class: 'btn btn-large red' %>
+          <% end %>
+        </div>
+  <% end %>
+  </div>

@@ -1,0 +1,41 @@
+<%
+content_for(:page_title, 'Plan Accounts')
+content_for(:page_heading, 'Accounts')
+%>
+
+<ul class="nav nav-pills">
+  <% if can?(:show, @plan) %><li><%= link_to "Plan", admin_plan_path(@plan) %></li><% end %>
+  <li class="active"><%= link_to "Accounts", admin_plan_accounts_path(@plan) %></li>
+</ul>
+
+<% if @accounts.empty? then %>
+<p>No accounts found</p>
+<% else %>
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Company Name</th>
+			<th>Active</th>
+			<th>Plan</th>
+			<th>City</th>
+			<th>Zip</th>
+			<th>State</th>
+			<th>Country</th>
+		</tr>
+	</thead>
+	<tbody>
+<% @accounts.each do |account| %>
+		<tr>
+			<td><%= link_to_if can?(:show, account), account.company_name, admin_account_path(account) %></td>
+			<td><%= account_status(account) %></td>
+			<td><%= account.plan %></td>
+			<td><%= account.address_city %></td>
+			<td><%= account.address_zip %></td>
+			<td><%= account.address_state %></td>
+			<td><%= account.address_country %></td>
+		</tr>
+<% end %>
+	</tbody>
+</table>
+<%= paginate @accounts %>
+<% end %>

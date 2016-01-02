@@ -1,0 +1,49 @@
+<%
+   content_for(:page_title, 'Motivi cancellazione')
+   content_for(:page_heading, 'Motivi cancellazione')
+%>
+
+<div class="row">
+  <div class="col s12 m2 l2">
+    <div class="collection z-depth-1">
+      <%= link_to 'Categorie', admin_cancellation_categories_path, class: 'collection-item' %>
+      <%= link_to 'Categoria', admin_cancellation_category_path(@cancellation_category), class: 'collection-item' %>
+      <%= link_to 'Motivi', admin_cancellation_category_cancellation_reasons_path(@cancellation_category), class: 'collection-item active' %>
+    </div>
+  </div>
+
+  <div class="col s12 m10 l10 right-align">
+    <% if can? :new, CancellationReason %><%= link_to 'Nuovo motivo cancellazione', new_admin_cancellation_category_cancellation_reason_path(@cancellation_category), class: 'btn btn-large green' %>
+    <% end %>
+  </div>
+
+  <div class="col s12 m10 l10">
+    <% if @cancellation_reasons.empty? then %>
+        <div class="btn-btn-large red valign">
+          Nessun motivo di cancellazione
+        </div>
+    <% else %>
+        <table class="responsive-table highlight">
+          <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Attivo</th>
+            <th>Messaggio permesso</th>
+            <th>Messaggio richiesto</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @cancellation_reasons.each do |cancellation_reason| %>
+              <tr>
+                <td><%= link_to_if can?(:show, cancellation_reason), cancellation_reason.name, admin_cancellation_category_cancellation_reason_path(@cancellation_category, cancellation_reason) %></td>
+                <td><%= cancellation_reason.active %></td>
+                <td><%= cancellation_reason.allow_message %></td>
+                <td><%= cancellation_reason.require_message %></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <%= paginate @cancellation_reasons %>
+    <% end %>
+  </div>
+</div>

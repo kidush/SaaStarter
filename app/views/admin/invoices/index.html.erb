@@ -1,0 +1,80 @@
+<%
+   content_for(:page_title, 'Fatture')
+   content_for(:page_heading, 'Fatture')
+%>
+
+<div class="row">
+  <% if @account %>
+      <div class="col s12 m2 l2">
+        <div class="collection z-depth-1">
+          <% if can?(:index, @account) %>
+              <%= link_to 'Account', admin_account_path(@account), class: 'collection-item' %>
+          <% end %>
+          <% if can?(:users, @account) %>
+              <%= link_to 'Utenti', admin_account_users_path(@account), class: 'collection-item' %>
+          <% end %>
+          <% if can?(:index, @account) %>
+              <%= link_to 'Nuovo Utente', admin_account_user_invitations_path(@account), class: 'collection-item' %>
+          <% end %>
+          <%= link_to 'Fatture', admin_account_invoices_path(@account), class: 'collection-item active' %>
+          <% if can?(:events, @account) %>
+              <%= link_to 'Eventi', admin_account_events_path(@account), class: 'collection-item' %>
+          <% end %>
+          <% if can? :edit, @account %>
+              <%= link_to 'Modifica Account', edit_admin_account_path(@account), class: 'collection-item' %>
+          <% end %>
+          <% if @account.status == :active %>
+              <% if can? :destroy, @account %>
+                  <%= link_to 'Elimina Account', admin_account_cancel_path(@account), class: 'collection-item' %>
+              <% end %>
+          <% end %>
+          <% if @account.status == :cancelled || @account.status == :cancel_pending %>
+              <% if can? :edit, @account %>
+                  <%= link_to 'Attivazione Account', admin_account_restore_path(@account), class: 'collection-item' %>
+              <% end %>
+          <% end %>
+        </div>
+      </div>
+  <% end %>
+
+    <% if @invoices.empty? then %>
+      <div class="col s12 m10 l10 center-align">
+        <div class="btn btn-large red">
+          <i class="material-icons left medium">warning</i>
+          Nessuna fattura
+          <i class="material-icons right medium">warning</i>
+        </div>
+      </div>
+    <% else %>
+        <div class="col s12 m10 l10">
+          <table class="responsive-table highlight">
+            <thead>
+            <tr>
+              <th>Fattura #</th>
+              <th>Account</th>
+              <th>Inviata il</th>
+              <th>Pagata il</th>
+              <th>Importo</th>
+              <th>Stripe ID</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @invoices.each do |invoice| %>
+                <tr>
+                  <td><%= link_to_if can?(:show, invoice), invoice.inv_number, admin_invoice_path(invoice) %></td>
+                  <td><%= link_to_if can?(:show, invoice.account), invoice.account, admin_account_path(invoice.account) %></td>
+                  <td><%= invoice.invoiced_at.strftime('%d-%m-%Y - %T.%L') %></td>
+                  <td><%= invoice.paid_at.strftime('%d-%m-%Y - %T.%L') %></td>
+                  <td><%= invoice.total_amount %></td>
+                  <td><%= invoice.stripe_invoice_id %>
+                    <a href="https://dashboard.stripe.com/test/invoices/<%= invoice.stripe_invoice_id %>"><%= fa_icon 'external-link' %></a>
+                    <% if invoice.download_url %> <a href="<%= invoice.download_url %>"><%= fa_icon 'download' %></a>
+                    <% end %></td>
+                </tr>
+            <% end %>
+            </tbody>
+          </table>
+          <%= paginate @invoices %>
+    <% end %>
+    </div>
+    </div>

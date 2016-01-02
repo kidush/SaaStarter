@@ -1,0 +1,106 @@
+<%
+   content_for(:page_title, "Account - #{@account}")
+   content_for(:page_heading, 'Account')
+%>
+
+<div class="row">
+  <div class="col s2">
+    <div class="collection z-depth-1">
+      <%= link_to 'Account', admin_account_path(@account), class: 'active collection-item' %>
+      <% if can?(:users, @account) %>
+          <%= link_to 'Utenti', admin_account_users_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if can?(:index, @account) %>
+          <%= link_to 'Utenti Invitati', admin_account_user_invitations_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if can?(:invoices, @account) %>
+          <%= link_to 'Fatture', admin_account_invoices_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if can?(:events, @account) %>
+          <%= link_to 'Eventi', admin_account_events_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if can? :edit, @account %>
+          <%= link_to 'Modifica Account', edit_admin_account_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if @account.status == :active %>
+          <% if can? :destroy, @account %>
+              <%= link_to 'Elimina Account', admin_account_cancel_path(@account), class: 'collection-item' %>
+          <% end %>
+      <% end %>
+      <% if @account.status == :cancelled || @account.status == :cancel_pending %>
+          <% if can? :edit, @account %>
+              <%= link_to 'Attiva Account', admin_account_restore_path(@account), class: 'collection-item' %>
+          <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col s10">
+
+    <div class="card blue-grey darken-1">
+      <div class="card-content white-text">
+        <h4>INFORMAZIONI ACCOUNT</h4>
+        <div class="divider"></div>
+        <div class="row">
+          <div class="col s12 m6 l6">
+            <h5>Generale</h5>
+            <h6>Nome azienda:<strong class="right"><%= @account.company_name %></strong></h6>
+            <h6>Status attivazione:<strong class="right"><%= account_status(@account) %></strong></h6>
+            <h6>Valido sino a:<strong class="right"><%= @account.expires_at %></strong></h6>
+            <h6>Piano:<strong class="right"><%= link_to_if can?(:show, @account.plan), @account.plan, admin_plan_path(@account.plan) %></strong>
+            </h6>
+            <% if !@account.paused_plan.nil? %>
+                <h6>Piano
+                  bloccato:<strong class="right"><%= link_to_if can?(:show, @account.paused_plan), @account.paused_plan, admin_plan_path(@account.paused_plan) %></strong>
+                </h6>
+            <% end %>
+            <h6>Email<strong class="right"><%= @account.email %></strong></h6>
+            <h6>Card Token<strong class="right"><%= @account.card_token %></strong></h6>
+          </div>
+          <div class="col s12 m6 l6">
+            <h5>Indirizzo</h5>
+            <h6>Indirizzo principale<strong class="right"><%= @account.address_line1 %></strong></h6>
+            <h6>Indirizzo secondario<strong class="right"><%= @account.address_line2 %></strong></h6>
+            <h6>Citta<strong class="right"><%= @account.address_city %></strong></h6>
+            <h6>CAP<strong class="right"><%= @account.address_zip %></strong></h6>
+            <h6>Provincia<strong class="right"><%= @account.address_state %></strong></h6>
+            <h6>Stato<strong class="right"><%= @account.address_country_name %></strong></h6>
+          </div>
+          <div class="col s12 m6 l6">
+            <h5>Specifiche Web Host</h5>
+            <h6>URL personalizzato<strong class="right">
+              <% if @account.plan_allow_custom_path %><%= @account.custom_path %>
+              <% else %>Disabilitato secondo il piano
+              <% end %>
+            </strong></h6>
+            <h6>Hostname personalizzato<strong class="right">
+              <% if @account.plan_allow_hostname %><%= @account.hostname %>
+              <% else %>Disabilitato secondo il piano
+              <% end %>
+            </strong></h6>
+            <h6>Sottodominio personlizzato<strong class="right">
+              <% if @account.plan_allow_subdomain %><%= @account.subdomain %>
+              <% else %>Disabilitato secondo il piano
+              <% end %>
+            </strong></h6>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% if @account.cancelled_at %>
+        <div class="col s12 m6 push-m3 l6 push-l3">
+          <div class="card red darken-1">
+            <div class="card-content white-text">
+              <h5>ACCOUNT CANCELLATO</h5>
+              <div class="divider"></div>
+              <h6>Categoria cancellazione<strong class="right"><%= @account.cancellation_category %></strong></h6>
+              <h6>Motivo cancellazione<strong class="right"><%= @account.cancellation_reason %></strong></h6>
+              <h6>Messaggio cancellazione<strong class="right"><%= @account.cancellation_message %></strong></h6>
+              <h6>Data cancellazione<strong class="right"><%= @account.cancelled_at %></strong></h6>
+            </div>
+          </div>
+        </div>
+    <% end %>
+    </dl>
+  </div>
+</div>

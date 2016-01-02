@@ -1,0 +1,6 @@
+<%
+content_for(:page_title, "Edit User Permission - #{@user}")
+content_for(:page_heading, 'Edit User Permission')
+%>
+
+<%= render 'form', account: @account, user_permission: @user_permission, user: @user %>

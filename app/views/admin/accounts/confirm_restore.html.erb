@@ -1,0 +1,20 @@
+<%
+   content_for(:page_title, "Restore Account - #{@account}")
+   content_for(:page_heading, 'Restore Account')
+%>
+
+<h2 class="text-danger">Piacere di rivederti!! Grazie di essere tornato.</h2>
+
+<p>Il ripristino di un account può significare l'addebito del servizio per la sua riattivazione.</p>
+
+<h3><%= @account %></h3>
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <%= form_for [:admin, @account], url: admin_account_restore_path(@account), method: :patch do |f| %>
+          <%= f.submit 'Ripristina account', class: 'btn btn-large green' %>
+          <%= link_to 'Mantieni account', admin_accounts_path, class: 'btn btn-large green' %>
+      <% end %>
+    </div>
+  </div>
+</div>

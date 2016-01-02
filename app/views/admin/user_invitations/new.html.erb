@@ -1,0 +1,6 @@
+<%
+content_for(:page_title, 'Nuovo invito utente')
+content_for(:page_heading, 'Nuovo invito utente')
+%>
+
+<%= render 'form', account: @account, user_invitation: @user_invitation %>

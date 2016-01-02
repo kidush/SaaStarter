@@ -1,0 +1,137 @@
+<%
+content_for(:page_title, 'Credit Card')
+content_for(:page_heading, 'Credit Card')
+%>
+
+<% content_for :head do %>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<% end %>
+
+<div id="stripe_errors" class="alert alert-danger" style="display:none"></div>
+
+<%= render_errors @account %>
+
+<%= form_for [:settings, @account], url: settings_card_path, method: :patch do |f| %>
+  <%= f.hidden_field :plan_id %>
+  <%= f.hidden_field :card_token %>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group" id="card_name_group">
+        <label class="control-label">Card Name</label>
+        <input type="text" id="cc_name" placeholder="Card Name" class="form-control" data-stripe="name">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-group" id="card_number_group">
+        <label class="control-label">Card Number</label>
+        <div class="input-group">
+          <input type="text" id="cc_number" placeholder="Card Number" class="form-control" data-stripe="number">
+          <span class="input-group-addon"><%= image_tag('cards/credit_small.png', id: 'cc_image') %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-6">
+      <div class="form-group" id="card_expiry_group">
+        <label class="control-label">Expiry Date</label>
+        <div class="input-group">
+          <div class="col-xs-6 col-sm-6" style="padding-left: 0">
+            <input type="cc_expiry_month" placeholder="MM" class="form-control" data-stripe="exp-month">
+          </div>
+          <div class="col-xs-6 col-sm-6" style="padding-left: 0">
+            <input type="cc_expiry_year" placeholder="YYYY" class="form-control" data-stripe="exp-year">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6">
+      <div class="form-group" id="card_cvc_group">
+        <label class="control-label">CVC</label>
+        <input type="text" id="cc_cvc" placeholder="CVC" class="form-control" data-stripe="cvc">
+      </div>
+    </div>
+  </div>
+
+<% if @account.card_brand? %>
+  <%= f.submit "Update Card", class: "btn btn-primary" %>
+<% else %>
+  <%= f.submit "Add Card", class: "btn btn-primary" %>
+<% end %>
+  <%= link_to "Discard Changes", settings_card_path %>
+<% end %>
+
+<% content_for :footer do %>
+<script type="text/javascript">
+  // Handle the response from Stripe
+  function stripeResponseHandler(status, response) {
+    var form = $('form.edit_account');
+    if (response.error) {
+      var stripe_errors = $('#stripe_errors');
+      stripe_errors.text(response.error.message);
+	  stripe_errors.show();
+	  if (response.error.code == 'invalid_number' || response.error.code == 'incorrect_number' || response.error.code == 'card_declined') {
+	    form.find('#card_number_group').addClass('has-error');
+	  } else {
+	    form.find('#card_number_group').removeClass('has-error');
+	  }
+	  if (response.error.code == 'invalid_expiry_month' || response.error.code == 'invalid_expiry_year') {
+	    form.find('#card_expiry_group').addClass('has-error');
+	  } else {
+	    form.find('#card_expiry_group').removeClass('has-error');
+	  }
+	  if (response.error.code == 'invalid_cvc') {
+	    form.find('#card_cvc_group').addClass('has-error');
+	  } else {
+	    form.find('#card_cvc_group').removeClass('has-error');
+	  }
+      form.find('input[type=submit]').prop('disabled', false);
+    } else {
+      form.find('#account_card_token').val(response.id);
+      form.get(0).submit();
+    }
+  }
+
+  $(function() {
+    Stripe.setPublishableKey('<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>');
+
+    var form = $('form.edit_account');
+
+    form.submit(function(e) {
+      e.preventDefault();
+      var form = $(this);
+      form.find('input[type=submit]').prop('disabled', true);
+      Stripe.card.createToken(form, stripeResponseHandler);
+    });
+
+    // Change the icon in the credit card number based on the credit card presented
+    $('#cc_number').on("keyup", function () {
+      var url = "<%= image_url("cards/credit_small.png") %>";
+      switch(Stripe.card.cardType($('#cc_number').val()).toLowerCase()) {
+        case "american express":
+          url = "<%= image_url("cards/amex_small.png") %>";
+          break;
+        case "diners club":
+          url = "<%= image_url("cards/diners_small.png") %>";
+          break;
+        case "discover":
+          url = "<%= image_url("cards/discover_small.png") %>";
+          break;
+        case "jcb":
+          url = "<%= image_url("cards/jcb_small.png") %>";
+          break;
+        case "mastercard":
+          url = "<%= image_url("cards/mastercard_small.png") %>";
+          break;
+        case "visa":
+          url = "<%= image_url("cards/visa_small.png") %>";
+          break;
+      }
+      $('#cc_image').attr('src', url);
+    });
+  });
+</script>
+<% end %>

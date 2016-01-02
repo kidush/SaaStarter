@@ -1,0 +1,52 @@
+<%
+   content_for(:page_title, "Utente - #{@user}")
+   content_for(:page_heading, 'Utente')
+%>
+
+<div class="row">
+  <div class="col s12 m2 l2">
+    <div class="collection z-depth-1">
+      <%= link_to 'Utente', admin_user_path(@user), class: 'collection-item active' %>
+      <% if can?(:accounts, @user) %><%= link_to 'Account', admin_user_accounts_path(@user), class: 'collection-item' %>
+      <% end %>
+      <% if can?(:index, @user) %><%= link_to 'Inviti', admin_user_user_invitations_path(@user), class: 'collection-item' %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col s12 m10 l10 right-align">
+    <% if can? :edit, @user %><%= link_to 'Edit User', edit_admin_user_path(@user), class: 'btn btn-large yellow' %>
+    <% end %>
+    <% if can? :destroy, @user %><%= link_to 'Delete User', admin_user_path(@user), method: :delete, class: 'btn btn-large red' %>
+    <% end %>
+  </div>
+
+  <div class="col s12 m8 l8 right">
+    <div class="card-panel teal">
+      <h4>Informazioni Utente <%= @user %></h4>
+      <p>Nome: <strong class="right"><%= @user.first_name %></strong></p>
+      <p>Cognome: <strong class="right"><%= @user.last_name %></strong></p>
+      <p>Email: <strong class="right"><a class="black-text" href="mailto:<%= @user.email %>"><i class="material-icons right">send</i><%= @user.email %></a></strong></p>
+      <p>Status account:
+        <% if @user.active %><strong class="right"><i class="material-icons right">done</i>Attivo</strong>
+        <% else %><strong class="right"><i class="material-icons right">clear</i>Inattivo</strong>
+        <% end %>
+      </p>
+      <p>Super Admin:
+        <% if @user.super_admin %><strong class="right"><i class="material-icons">done</i>Attivo</strong>
+        <% else %><strong class="right"><i class="material-icons right">clear</i>Inattivo</strong>
+        <% end %>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s12 right-align">
+    <% if can? :edit, @user %><%= link_to 'Edit User', edit_admin_user_path(@user), class: 'btn btn-large yellow' %>
+    <% end %>
+    <% if can? :destroy, @user %><%= link_to 'Delete User', admin_user_path(@user), method: :delete, class: 'btn btn-large red' %>
+    <% end %>
+  </div>
+</div>
+   

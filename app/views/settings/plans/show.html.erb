@@ -1,0 +1,12 @@
+<%
+content_for(:page_title, 'Plans')
+content_for(:page_heading, 'Plans')
+%>
+
+<%= render 'shared/pricing_table', plans: @plans, account: @current_account, action: :change  %>
+
+<div class="row">
+  <div class="col-sm-12">
+    <p><%= link_to "Cancel account", cancel_settings_plan_path, class: "btn btn-danger" %></p>
+  </div>
+</div>

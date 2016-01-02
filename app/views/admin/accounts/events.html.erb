@@ -1,0 +1,74 @@
+<%
+   content_for(:page_title, "Eventi - #{@account}")
+   content_for(:page_heading, 'Eventi')
+%>
+
+<div class="row">
+  <div class="col s12 m3 l2">
+    <div class="collection z-depth-1">
+      <% if can?(:index, @account) %>
+          <%= link_to 'Account', admin_account_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if can?(:users, @account) %>
+          <%= link_to 'Utenti', admin_account_users_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if can?(:index, @account) %>
+          <%= link_to 'Nuovo Utente', admin_account_user_invitations_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if can?(:invoices, @account) %>
+          <%= link_to 'Fatture', admin_account_invoices_path(@account), class: 'collection-item' %>
+      <% end %>
+      <%= link_to 'Eventi', admin_account_events_path(@account), class: 'collection-item active' %>
+      <% if can? :edit, @account %>
+          <%= link_to 'Modifica Account', edit_admin_account_path(@account), class: 'collection-item' %>
+      <% end %>
+      <% if @account.status == :active %>
+          <% if can? :destroy, @account %>
+              <%= link_to 'Elimina Account', admin_account_cancel_path(@account), class: 'collection-item' %>
+          <% end %>
+      <% end %>
+      <% if @account.status == :cancelled || @account.status == :cancel_pending %>
+          <% if can? :edit, @account %>
+              <%= link_to 'Attivazione Account', admin_account_restore_path(@account), class: 'collection-item' %>
+          <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col s12 m9 l10">
+    <% if @app_events.empty? then %>
+        <div class="btn btn-large red valign">
+          Nessun evento presente
+        </div>
+    <% else %>
+        <table class="responsive-table highlight">
+          <thead>
+          <tr>
+            <th>Data</th>
+            <th>Account</th>
+            <th>Utente</th>
+            <th>Esito</th>
+            <th>Messaggio</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @app_events.each do |app_event| %>
+              <tr>
+                <td><%= app_event.created_at.strftime('%d-%m-%Y - %T.%L') %></td>
+                <td>
+                  <% if app_event.account != nil %><%= link_to app_event.account, admin_account_path(app_event.account) %>
+                  <% end %></td>
+                <td>
+                  <% if app_event.user != nil %><%= link_to app_event.user, admin_user_path(app_event.user) %>
+                  <% end %></td>
+                <td><%= log_level(app_event) %></td>
+                <td><%= app_event.message %></td>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <%= paginate @app_events %>
+    <% end %>
+  </div>
+
+</div>

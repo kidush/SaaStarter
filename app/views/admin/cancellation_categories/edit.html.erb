@@ -1,0 +1,6 @@
+<%
+content_for(:page_title, "Modifica categorie cancellazione - #{@cancellation_category}")
+content_for(:page_heading, 'Modifica categorie cancellazione')
+%>
+
+<%= render 'form', cancellation_category: @cancellation_category %>

@@ -1,0 +1,78 @@
+<%= render_errors account %>
+
+<%= form_for [:admin, account] do |f| %>
+    <div class="row">
+      <div class="input-field col s12 m6 l4">
+        <%= f.text_field :company_name, class: 'validate' %>
+        <%= f.label :company_name, 'Azienda' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.collection_select :plan_id, Plan.available, :id, :name, {}, {class: 'validate'} %>
+        <%= f.label :plan, 'Nome Piano' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.collection_select :paused_plan_id, Plan.available, :id, :name, {include_blank: true}, {class: 'validate'} %>
+        <%= f.label :paused_plan_id, 'Piano Bloccato' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.date_field :expires_at, class: 'validate datepicker' %>
+        <%= f.label :expires_at, 'Scadenza' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.text_field :email, class: 'validate' %>
+        <%= f.label :email, 'Email' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.text_field :address_line1, class: 'validate' %>
+        <%= f.label :address_line1, 'Indirizzo primario' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.text_field :address_line2, class: 'validate' %>
+        <%= f.label :address_line2, 'Indirizzo secondario' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.text_field :address_city, class: 'validate' %>
+        <%= f.label :address_city, 'Citta' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.text_field :address_zip, class: 'validate' %>
+        <%= f.label :address_zip, 'CAP' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.text_field :address_state, class: 'validate' %>
+        <%= f.label :address_state, 'Provincia' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.country_select :address_country, ['IT'], {iso_codes: true}, {class: 'validate'} %>
+        <%= f.label :address_country, 'Stato' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.text_field :custom_path, class: 'validate' %>
+        <%= f.label :custom_path, 'Indirizzo web personalizzato' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.text_field :hostname, class: 'validate' %>
+        <%= f.label :hostname, 'Host personalizzato' %>
+      </div>
+      <div class="input-field col s12 m6 l4">
+        <%= f.text_field :subdomain, class: 'validate' %>
+        <%= f.label :subdomain, 'Sottodominio personalizzato' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12 m2 l2">
+        <%= f.check_box :active %>
+        <%= f.label :active, 'Attivo' %>
+      </div>
+      <div class="input-field col s12 m3 l2">
+        <%= f.submit 'Salva', class: 'btn btn-large green' %>
+      </div>
+      <div class="input-field col s12 m3 l2">
+        <% if account.new_record? %>
+            <%= link_to 'Annulla', admin_accounts_path, class: 'btn btn-large red' %>
+        <% else %>
+            <%= link_to 'Annula', admin_account_path(account), class: 'btn btn-large red' %>
+        <% end %>
+      </div>
+    </div>
+<% end %>
