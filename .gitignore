@@ -16,3 +16,6 @@
 /tmp
 /nbproject
 /config/database.yml
+
+# Ignore files created by Rubymine
+.idea/
